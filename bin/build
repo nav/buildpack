@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+echo "-----> Nav's Buildpack"
+
+# 1. Get ARGS
+LAYERS_DIR=$1
+PLATFORM_DIR=$2
+ENV_DIR="${PLATFORM_DIR}/env"
+BUILD_PLAN=$3
+
+
+# 2. Setup buildpack directories
+echo "-----> Setting up buildpack directories"
+NAV_DIR="${LAYERS_DIR}/nav"
+
+BIN_DIR="${NAV_DIR}/bin"
+LIB_DIR="${NAV_DIR}/lib"
+if [ ! -d ${BIN_DIR} ]; then
+    mkdir -p ${BIN_DIR}
+fi
+if [ ! -d ${LIB_DIR} ]; then
+    mkdir -p ${LIB_DIR}
+fi
+
+# 3. Install envconsul
+echo "-----> Installing envconsul"
+version=0.9.3
+filename="envconsul_${version}_linux_amd64.zip"
+url="https://releases.hashicorp.com/envconsul/${version}/${filename}"
+
+if [ ! -f ${NAV_DIR}/bin/envconsul ]; then
+    wget -O ${NAV_DIR}/envconsul.zip ${url}
+    unzip ${NAV_DIR}/envconsul.zip -d ${BIN_DIR}
+    rm ${NAV_DIR}/envconsul.zip
+fi
+
+# 4. Install vault
+echo "-----> Installing vault"
+version=1.5.4
+filename="vault_${version}_linux_amd64.zip"
+url="https://releases.hashicorp.com/vault/${version}/${filename}"
+
+if [ ! -f ${NAV_DIR}/bin/vault ]; then
+    wget -O ${NAV_DIR}/vault.zip ${url}
+    unzip ${NAV_DIR}/vault.zip -d ${BIN_DIR}
+    rm ${NAV_DIR}/vault.zip
+fi
+
+# Store
+export PATH="${PATH}:${NAV_DIR}/bin"
+
+cat > "${LAYERS_DIR}/nav.toml" <<EOL
+launch = true
+cache = true
+build = true
+EOL

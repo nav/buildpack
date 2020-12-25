@@ -1,0 +1,9 @@
+api = "0.1"
+
+[buildpack]
+id = "com.navaulakh.buildpacks.base"
+version = "0.1"
+name = "Nav's Buildpack"
+
+[[stacks]]
+id = "heroku-20"
