@@ -1,4 +1,4 @@
-api = "0.1"
+api = "0.2"
 
 [buildpack]
 id = "com.navaulakh.buildpacks.base"
