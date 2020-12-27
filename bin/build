@@ -30,8 +30,8 @@ filename="envconsul_${version}_linux_amd64.zip"
 url="https://releases.hashicorp.com/envconsul/${version}/${filename}"
 
 if [ ! -f ${NAV_DIR}/bin/envconsul ]; then
-    wget -O ${NAV_DIR}/envconsul.zip ${url}
-    unzip ${NAV_DIR}/envconsul.zip -d ${BIN_DIR}
+    wget -q -O ${NAV_DIR}/envconsul.zip ${url}
+    unzip ${NAV_DIR}/envconsul.zip -d ${BIN_DIR} 
     rm ${NAV_DIR}/envconsul.zip
 fi
 
@@ -42,9 +42,18 @@ filename="vault_${version}_linux_amd64.zip"
 url="https://releases.hashicorp.com/vault/${version}/${filename}"
 
 if [ ! -f ${NAV_DIR}/bin/vault ]; then
-    wget -O ${NAV_DIR}/vault.zip ${url}
+    wget -q -O ${NAV_DIR}/vault.zip ${url}
     unzip ${NAV_DIR}/vault.zip -d ${BIN_DIR}
     rm ${NAV_DIR}/vault.zip
+fi
+
+# 5. Install jq
+echo "-----> Installing jq"
+url="https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64"
+
+if [ ! -f ${NAV_DIR}/bin/jq ]; then
+    wget -q -O ${NAV_DIR}/bin/jq ${url}
+    chmod +x ${NAV_DIR}/bin/jq
 fi
 
 # Store
